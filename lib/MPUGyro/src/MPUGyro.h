@@ -15,7 +15,7 @@ public:
     void printPlot(HardwareSerial serial);
     void tick();
     uint8_t ADO_pin;
-    float data[3];
+    uint8_t data[3];
 private:
     MPU6050 _mpuObject;
     uint32_t _timer;

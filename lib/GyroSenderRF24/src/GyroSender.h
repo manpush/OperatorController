@@ -13,7 +13,7 @@ class GyroSender {
 public:
     GyroSender();
     void tick();
-    void createPkg(int val[9]);
+    void createPkg(uint8_t val[9]);
 private:
     uint32_t send_data_tmr;
     RF24 radio;

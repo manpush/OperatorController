@@ -5,6 +5,7 @@
 #include "nRF24L01.h"
 #include "globalVariables.h"
 
+
 void setup() {
     Serial.begin(9600);
     Wire.begin();
@@ -12,5 +13,5 @@ void setup() {
 
 void loop() {
     Mpu1.tick();
-
+    Gyro.tick();
 }

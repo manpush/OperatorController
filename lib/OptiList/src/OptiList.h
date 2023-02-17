@@ -6,16 +6,19 @@
 #define OPRATORCONTROLLER_OPTILIST_H
 
 
+#include "../../MPUGyro/src/MPUGyro.h"
+
 class OptiList {
 public:
     struct data {
-        void * gyroInfo;
+        MPUGyro * gyroInfo;
         OptiList::data * next;
     };
     OptiList();
     OptiList::data * firstElement;
-    void push(void * data);
-    void * getById(int id);
+    int Count;
+    void push(MPUGyro * data);
+    MPUGyro * getById(int id);
 };
 
 

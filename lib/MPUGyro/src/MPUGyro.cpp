@@ -40,13 +40,15 @@ void MPUGyro::tick() {
             _mpuObject.dmpGetGravity(&gravity, &q);
             _mpuObject.dmpGetYawPitchRoll(ypr, &q, &gravity);
             for (int i=0;i<3;i++) { //проверка на количество оборотов по всем осям
-                if (degrees(data[i]) > 170 && degrees(ypr[i]) < -170) {
+                if (data[i] > 170 && degrees(ypr[i]) < -170) {
                     countFlips[i]++;
-                } else if ((degrees(ypr[i]) > 170 && degrees(data[i]) < -170)){
+                } else if ((degrees(ypr[i]) > 170 && data[i] < -170)){
                     countFlips[i]--;
                 }
             }
-            memcpy(data, ypr, sizeof(ypr));
+            data[0] = degrees(ypr[0]);
+            data[1] = degrees(ypr[1]);
+            data[2] = degrees(ypr[2]);
         }
         _timer = millis();  // сброс таймера
         digitalWrite(ADO_pin, 0);

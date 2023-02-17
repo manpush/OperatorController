@@ -3,7 +3,7 @@
 //
 #include <Arduino.h>
 #include "GyroSender.h"
-#include "settings.h"
+#include "../../../src/globalVariables.h"
 
 GyroSender::GyroSender() {
     radio = (RF24(CE, CSN));
@@ -23,16 +23,27 @@ GyroSender::GyroSender() {
     // ВНИМАНИЕ!!! enableAckPayload НЕ РАБОТАЕТ НА СКОРОСТИ 250 kbps!
     radio.powerUp();        // начать работу
     radio.stopListening();  // не слушаем радиоэфир, мы передатчик
+#ifdef MPU1
+    _gyroList.push(&Mpu1);
+#endif
+#ifdef MPU2
+    _gyroList.push(&Mpu2);
+#endif
+#ifdef MPU3
+    _gyroList.push(&Mpu3);
+#endif
 }
 void GyroSender::tick(){
     if (millis() - send_data_tmr > 300) {      //отправляем данные получателю каждые 300мс
-        int val[9];
+        uint8_t val[9] = {0,0,0,0,0,0,0,0,0};
         createPkg(val);
-        radio.write(val, 9);
+        radio.write(val, sizeof(uint8_t)*9);
         send_data_tmr = millis();
     }
 }
 
-void GyroSender::createPkg(int * val) {
-//TODO
+void GyroSender::createPkg(uint8_t val[9]) {
+    for (int i=0; i<_gyroList.Count;i++){
+        memcpy(&val[i*sizeof(uint8_t)*3], _gyroList.getById(i)->data, sizeof(uint8_t)*3);
+    }
 }

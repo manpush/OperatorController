@@ -6,27 +6,30 @@
 #include "OptiList.h"
 
 OptiList::OptiList() {
-
+    Count=0;
+    firstElement= nullptr;
 }
 
-void OptiList::push(void * gyroInfo) {
+void OptiList::push(MPUGyro * gyroInfo) {
     if (firstElement == nullptr){
         firstElement = (OptiList::data*) malloc(sizeof(OptiList::data));
-        struct data buf;
-        buf.gyroInfo = gyroInfo;
-        buf.next = nullptr;
+        OptiList::data buf{
+                gyroInfo,
+                nullptr
+        };
         *firstElement = buf;
     } else {
         OptiList::data *ptr = firstElement;
         for (;ptr->next != nullptr; ptr = ptr->next){}
         ptr->next = (OptiList::data*) malloc(sizeof(OptiList::data));
-        struct data buf;
+        OptiList::data buf{};
         buf.gyroInfo = gyroInfo;
         buf.next = nullptr;
         *(ptr->next) = buf;
     }
+    Count++;
 }
-void * OptiList::getById(int id) {
+MPUGyro * OptiList::getById(int id) {
     if (firstElement== nullptr){
         return nullptr;
     } else {
