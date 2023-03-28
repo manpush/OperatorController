@@ -5,15 +5,19 @@
 #include <helper_3dmath.h>
 #include "MPUGyro.h"
 
-MPUGyro::MPUGyro(uint8_t ADOpin) {
+MPUGyro::MPUGyro(int ADOpin) {
+    Serial.println(122);
     _mpuObject = (MPU6050(0x69));
     ADO_pin = ADOpin;
+    pinMode(ADO_pin, OUTPUT);
+    digitalWrite(ADO_pin, 1);
     _mpuObject.initialize();
     _mpuObject.dmpInitialize();
     _mpuObject.setDMPEnabled(true);
     _mpuObject.CalibrateGyro(10);
-    pinMode(ADO_pin, OUTPUT);
-    digitalWrite(ADO_pin, 1);
+    countFlips[0]=0;
+    countFlips[1]=0;
+    countFlips[2]=0;
     if (_mpuObject.dmpGetCurrentFIFOPacket(fifoBuffer)) {
         Quaternion q;
         VectorFloat gravity;
@@ -22,7 +26,9 @@ MPUGyro::MPUGyro(uint8_t ADOpin) {
         _mpuObject.dmpGetQuaternion(&q, fifoBuffer);
         _mpuObject.dmpGetGravity(&gravity, &q);
         _mpuObject.dmpGetYawPitchRoll(ypr, &q, &gravity);
-        memcpy(data, ypr, sizeof(ypr));
+        data[0] = degrees(ypr[0]);
+        data[1] = degrees(ypr[1]);
+        data[2] = degrees(ypr[2]);
     }
     _timer = millis();  // сброс таймера
     digitalWrite(ADO_pin, 0);
@@ -55,17 +61,17 @@ void MPUGyro::tick() {
     }
 }
 
-void MPUGyro::print(HardwareSerial serial) {
-    serial.print("X - "); serial.print(data[0]);serial.print(" - "); serial.println(countFlips[0]);
-    serial.print("Y - "); serial.print(data[1]);serial.print(" - "); serial.println(countFlips[1]);
-    serial.print("Z - "); serial.print(data[2]);serial.print(" - "); serial.println(countFlips[2]);
-    serial.println();
+void MPUGyro::print() {
+    Serial.print("X - "); Serial.print(data[0]);Serial.print(" - "); Serial.println(countFlips[0]);
+    Serial.print("Y - "); Serial.print(data[1]);Serial.print(" - "); Serial.println(countFlips[1]);
+    Serial.print("Z - "); Serial.print(data[2]);Serial.print(" - "); Serial.println(countFlips[2]);
+    Serial.println();
 }
 
-void MPUGyro::printPlot(HardwareSerial serial) {
-    serial.print(data[0]); serial.print(" ");
-    serial.print(data[1]); serial.print(" ");
-    serial.println(data[2]);
+void MPUGyro::printPlot() {
+    Serial.print(data[0] + countFlips[0]*360); Serial.print(" ");
+    Serial.print(data[1]+ countFlips[1]*360); Serial.print(" ");
+    Serial.println(data[2]+ countFlips[2]*360);
 }
 
 

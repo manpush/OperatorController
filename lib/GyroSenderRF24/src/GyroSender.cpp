@@ -3,10 +3,10 @@
 //
 #include <Arduino.h>
 #include "GyroSender.h"
-#include "../../../src/globalVariables.h"
+#include "../../../src/settings.h"
 
-GyroSender::GyroSender() {
-    radio = (RF24(CE, CSN));
+GyroSender::GyroSender(int ce, int csn) {
+    radio = (RF24(ce, csn));
     byte buf[][6] = {"1Node", "2Node", "3Node", "4Node", "5Node", "6Node"};
     memcpy(address, buf, sizeof(buf));
     radio.begin();                      // активировать модуль
@@ -23,27 +23,21 @@ GyroSender::GyroSender() {
     // ВНИМАНИЕ!!! enableAckPayload НЕ РАБОТАЕТ НА СКОРОСТИ 250 kbps!
     radio.powerUp();        // начать работу
     radio.stopListening();  // не слушаем радиоэфир, мы передатчик
-#ifdef MPU1
-    _gyroList.push(&Mpu1);
-#endif
-#ifdef MPU2
-    _gyroList.push(&Mpu2);
-#endif
-#ifdef MPU3
-    _gyroList.push(&Mpu3);
-#endif
 }
 void GyroSender::tick(){
     if (millis() - send_data_tmr > 300) {      //отправляем данные получателю каждые 300мс
-        uint8_t val[9] = {0,0,0,0,0,0,0,0,0};
+        int val[9] = {0,0,0,0,0,0,0,0,0};
         createPkg(val);
-        radio.write(val, sizeof(uint8_t)*9);
+        radio.write(val, sizeof(int)*9);
         send_data_tmr = millis();
+//        Serial.println(12);
+        //_gyroList.getById(0)->printPlot(Serial);
     }
 }
 
-void GyroSender::createPkg(uint8_t val[9]) {
+void GyroSender::createPkg(int val[9]) {
     for (int i=0; i<_gyroList.Count;i++){
-        memcpy(&val[i*sizeof(uint8_t)*3], _gyroList.getById(i)->data, sizeof(uint8_t)*3);
+        memcpy(&val[i*sizeof(int)*3], _gyroList.getById(i)->data, sizeof(int)*3);
+//        _gyroList.getById(i)->printPlot(Serial);
     }
 }

@@ -11,14 +11,15 @@
 
 class GyroSender {
 public:
-    GyroSender();
+    GyroSender(int ce, int csn);
     void tick();
-    void createPkg(uint8_t val[9]);
+    void createPkg(int val[9]);
+    OptiList _gyroList;
 private:
     uint32_t send_data_tmr;
     RF24 radio;
     byte address[6][6];
-    OptiList _gyroList;
+
 };
 
 

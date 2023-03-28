@@ -10,17 +10,17 @@
 
 class MPUGyro {
 public:
-    MPUGyro(uint8_t ADOpin);
-    void print(HardwareSerial serial);
-    void printPlot(HardwareSerial serial);
+    MPUGyro(int ADOpin);
+    void print();
+    void printPlot();
     void tick();
     uint8_t ADO_pin;
-    uint8_t data[3];
+    int data[3];
 private:
     MPU6050 _mpuObject;
     uint32_t _timer;
     uint8_t fifoBuffer[45];
-    uint8_t countFlips[3];
+    int8_t countFlips[3];
 };
 
 

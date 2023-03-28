@@ -10,20 +10,18 @@ OptiList::OptiList() {
     firstElement= nullptr;
 }
 
-void OptiList::push(MPUGyro * gyroInfo) {
+void OptiList::push(MPUGyro * gyro_Info) {
     if (firstElement == nullptr){
-        firstElement = (OptiList::data*) malloc(sizeof(OptiList::data));
-        OptiList::data buf{
-                gyroInfo,
+        firstElement = new OptiList::data {
+                gyro_Info,
                 nullptr
         };
-        *firstElement = buf;
     } else {
         OptiList::data *ptr = firstElement;
         for (;ptr->next != nullptr; ptr = ptr->next){}
         ptr->next = (OptiList::data*) malloc(sizeof(OptiList::data));
         OptiList::data buf{};
-        buf.gyroInfo = gyroInfo;
+        buf.gyroInfo = gyro_Info;
         buf.next = nullptr;
         *(ptr->next) = buf;
     }

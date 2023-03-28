@@ -13,9 +13,6 @@
 //#define MPU2 A1
 //#define MPU3 A0
 
-
-
-
 //============================ RADIO =============================
 // CE CSN pins
 #define CE 6
