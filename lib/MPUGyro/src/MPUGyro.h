@@ -12,10 +12,13 @@ class MPUGyro {
 public:
     MPUGyro(int ADOpin);
     void print();
+    int slice(int val, int from, int to);
     void printPlot();
     void tick();
     uint8_t ADO_pin;
     int data[3];
+    int convertData[3];
+    int startVal[3];
 private:
     MPU6050 _mpuObject;
     uint32_t _timer;

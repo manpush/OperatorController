@@ -26,9 +26,22 @@ MPUGyro::MPUGyro(int ADOpin) {
         _mpuObject.dmpGetQuaternion(&q, fifoBuffer);
         _mpuObject.dmpGetGravity(&gravity, &q);
         _mpuObject.dmpGetYawPitchRoll(ypr, &q, &gravity);
+
         data[0] = degrees(ypr[0]);
         data[1] = degrees(ypr[1]);
         data[2] = degrees(ypr[2]);
+
+        startVal[0] = degrees(ypr[0]);
+        startVal[1] = degrees(ypr[1]);
+        startVal[2] = degrees(ypr[2]);
+
+//        Serial.print(startVal[1]);Serial.print(" ");
+//        Serial.print(degrees(ypr[1]));Serial.print(" ");
+//        Serial.println(countFlips[1]);
+
+        convertData[0] = slice((int) (startVal[0] - degrees(ypr[0]) + 360 * countFlips[0])/10, -3, 3);
+        convertData[1] = slice((int) (startVal[1] - degrees(ypr[1]) + 360 * countFlips[1])/10, -3, 3);
+        convertData[2] = slice((int) (startVal[2] - degrees(ypr[2]) + 360 * countFlips[2])/10, -3, 3);
     }
     _timer = millis();  // сброс таймера
     digitalWrite(ADO_pin, 0);
@@ -52,13 +65,23 @@ void MPUGyro::tick() {
                     countFlips[i]--;
                 }
             }
+
             data[0] = degrees(ypr[0]);
             data[1] = degrees(ypr[1]);
             data[2] = degrees(ypr[2]);
+
+            convertData[0] = slice((int) (startVal[0] - degrees(ypr[0]) + 360 * countFlips[0])/10, -3, 3);
+            convertData[1] = slice((int) (startVal[1] - degrees(ypr[1]) + 360 * countFlips[1])/10, -3, 3);
+            convertData[2] = slice((int) (startVal[2] - degrees(ypr[2]) + 360 * countFlips[2])/10, -3, 3);
         }
         _timer = millis();  // сброс таймера
         digitalWrite(ADO_pin, 0);
     }
+}
+int MPUGyro::slice(int val, int from, int to){
+    if (val > to) return to;
+    else if (val<from) return from;
+    else return val;
 }
 
 void MPUGyro::print() {
@@ -69,9 +92,9 @@ void MPUGyro::print() {
 }
 
 void MPUGyro::printPlot() {
-    Serial.print(data[0] + countFlips[0]*360); Serial.print(" ");
-    Serial.print(data[1]+ countFlips[1]*360); Serial.print(" ");
-    Serial.println(data[2]+ countFlips[2]*360);
+    Serial.print(convertData[0] + countFlips[0]*360); Serial.print(" ");
+    Serial.print(convertData[1]+ countFlips[1]*360); Serial.print(" ");
+    Serial.println(convertData[2]+ countFlips[2]*360);
 }
 
 

@@ -28,6 +28,15 @@ void GyroSender::tick(){
     if (millis() - send_data_tmr > 300) {      //отправляем данные получателю каждые 300мс
         int val[9] = {0,0,0,0,0,0,0,0,0};
         createPkg(val);
+//        Serial.print(val[0]); Serial.print(" ");
+//        Serial.print(val[1]); Serial.print(" ");
+//        Serial.print(val[2]); Serial.print(" ");
+//        Serial.print(val[3]); Serial.print(" ");
+//        Serial.print(val[4]); Serial.print(" ");
+//        Serial.print(val[5]); Serial.print(" ");
+//        Serial.print(val[6]); Serial.print(" ");
+//        Serial.print(val[7]); Serial.print(" ");
+//        Serial.print(val[8]); Serial.println(sizeof(int)*9);
         radio.write(val, sizeof(int)*9);
         send_data_tmr = millis();
 //        Serial.println(12);
