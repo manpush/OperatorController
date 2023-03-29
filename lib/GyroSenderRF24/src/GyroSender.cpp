@@ -46,7 +46,7 @@ void GyroSender::tick(){
 
 void GyroSender::createPkg(int val[9]) {
     for (int i=0; i<_gyroList.Count;i++){
-        memcpy(&val[i*sizeof(int)*3], _gyroList.getById(i)->data, sizeof(int)*3);
+        memcpy(&val[i*sizeof(int)*3], _gyroList.getById(i)->convertData, sizeof(int)*3);
 //        _gyroList.getById(i)->printPlot(Serial);
     }
 }

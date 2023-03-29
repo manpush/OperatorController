@@ -24,6 +24,7 @@ private:
     uint32_t _timer;
     uint8_t fifoBuffer[45];
     int8_t countFlips[3];
+    bool startValFlag;
 };
 
 

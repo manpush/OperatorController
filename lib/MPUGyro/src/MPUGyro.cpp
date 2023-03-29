@@ -6,7 +6,7 @@
 #include "MPUGyro.h"
 
 MPUGyro::MPUGyro(int ADOpin) {
-    Serial.println(122);
+//    Serial.println(122);
     _mpuObject = (MPU6050(0x69));
     ADO_pin = ADOpin;
     pinMode(ADO_pin, OUTPUT);
@@ -18,31 +18,32 @@ MPUGyro::MPUGyro(int ADOpin) {
     countFlips[0]=0;
     countFlips[1]=0;
     countFlips[2]=0;
-    if (_mpuObject.dmpGetCurrentFIFOPacket(fifoBuffer)) {
-        Quaternion q;
-        VectorFloat gravity;
-        float ypr[3];
-        // расчёты
-        _mpuObject.dmpGetQuaternion(&q, fifoBuffer);
-        _mpuObject.dmpGetGravity(&gravity, &q);
-        _mpuObject.dmpGetYawPitchRoll(ypr, &q, &gravity);
-
-        data[0] = degrees(ypr[0]);
-        data[1] = degrees(ypr[1]);
-        data[2] = degrees(ypr[2]);
-
-        startVal[0] = degrees(ypr[0]);
-        startVal[1] = degrees(ypr[1]);
-        startVal[2] = degrees(ypr[2]);
-
+    startValFlag = true;
+    Serial.println(121);
+//    if (_mpuObject.dmpGetCurrentFIFOPacket(fifoBuffer)) {
+//        Serial.println(122);
+//        Quaternion q;
+//        VectorFloat gravity;
+//        float ypr[3];
+//        // расчёты
+//        _mpuObject.dmpGetQuaternion(&q, fifoBuffer);
+//        _mpuObject.dmpGetGravity(&gravity, &q);
+//        _mpuObject.dmpGetYawPitchRoll(ypr, &q, &gravity);
+//
+//        data[0] = degrees(ypr[0]);
+//        data[1] = degrees(ypr[1]);
+//        data[2] = degrees(ypr[2]);
+//
+//
+//
 //        Serial.print(startVal[1]);Serial.print(" ");
 //        Serial.print(degrees(ypr[1]));Serial.print(" ");
 //        Serial.println(countFlips[1]);
-
-        convertData[0] = slice((int) (startVal[0] - degrees(ypr[0]) + 360 * countFlips[0])/10, -3, 3);
-        convertData[1] = slice((int) (startVal[1] - degrees(ypr[1]) + 360 * countFlips[1])/10, -3, 3);
-        convertData[2] = slice((int) (startVal[2] - degrees(ypr[2]) + 360 * countFlips[2])/10, -3, 3);
-    }
+//
+//        convertData[0] = slice((int) (startVal[0] - degrees(ypr[0]) + 360 * 0)/10, -3, 3);
+//        convertData[1] = slice((int) (startVal[1] - degrees(ypr[1]) + 360 * 0)/10, -3, 3);
+//        convertData[2] = slice((int) (startVal[2] - degrees(ypr[2]) + 360 * 0)/10, -3, 3);
+//    }
     _timer = millis();  // сброс таймера
     digitalWrite(ADO_pin, 0);
 }
@@ -66,9 +67,22 @@ void MPUGyro::tick() {
                 }
             }
 
+            if (startValFlag){
+                startVal[0] = degrees(ypr[0]);
+                startVal[1] = degrees(ypr[1]);
+                startVal[2] = degrees(ypr[2]);
+                startValFlag = false;
+
+                Serial.print(startVal[1]);Serial.print(" ");
+                Serial.print(degrees(ypr[1]));Serial.print(" ");
+                Serial.println(countFlips[1]);
+            }
+
             data[0] = degrees(ypr[0]);
             data[1] = degrees(ypr[1]);
             data[2] = degrees(ypr[2]);
+
+
 
             convertData[0] = slice((int) (startVal[0] - degrees(ypr[0]) + 360 * countFlips[0])/10, -3, 3);
             convertData[1] = slice((int) (startVal[1] - degrees(ypr[1]) + 360 * countFlips[1])/10, -3, 3);
