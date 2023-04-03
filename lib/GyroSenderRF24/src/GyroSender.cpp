@@ -24,26 +24,30 @@ GyroSender::GyroSender(int ce, int csn) {
     radio.powerUp();        // начать работу
     radio.stopListening();  // не слушаем радиоэфир, мы передатчик
 }
+/* метод необходимо вызывать как можно чаще. Раз в 300мс осуществляет откпрвку данных на приёмник */
 void GyroSender::tick(){
     if (millis() - send_data_tmr > 300) {      //отправляем данные получателю каждые 300мс
-        int val[9] = {0,0,0,0,0,0,0,0,0};
-        createPkg(val);
-//        Serial.print(val[0]); Serial.print(" ");
-//        Serial.print(val[1]); Serial.print(" ");
-//        Serial.print(val[2]); Serial.print(" ");
-//        Serial.print(val[3]); Serial.print(" ");
-//        Serial.print(val[4]); Serial.print(" ");
-//        Serial.print(val[5]); Serial.print(" ");
-//        Serial.print(val[6]); Serial.print(" ");
-//        Serial.print(val[7]); Serial.print(" ");
-//        Serial.print(val[8]); Serial.println(sizeof(int)*9);
-        radio.write(val, sizeof(int)*9);
-        send_data_tmr = millis();
-//        Serial.println(12);
-        //_gyroList.getById(0)->printPlot(Serial);
+        int val[9] = {0,0,0,0,0,0,0,0,0}; //пакет данных по умолчанию
+        createPkg(val); // получение данных с гироскопов, и запись их в val
+
+        /*
+        //для отладки
+        Serial.print(val[0]); Serial.print(" ");
+        Serial.print(val[1]); Serial.print(" ");
+        Serial.print(val[2]); Serial.print(" ");
+        Serial.print(val[3]); Serial.print(" ");
+        Serial.print(val[4]); Serial.print(" ");
+        Serial.print(val[5]); Serial.print(" ");
+        Serial.print(val[6]); Serial.print(" ");
+        Serial.print(val[7]); Serial.print(" ");
+        Serial.print(val[8]); Serial.println(sizeof(int)*9);
+        */
+        radio.write(val, sizeof(int)*9); // отправка данных
+        send_data_tmr = millis(); //сброс таймера 300мс
     }
 }
 
+/* метод получения данных с гироскопов */
 void GyroSender::createPkg(int val[9]) {
     for (int i=0; i<_gyroList.Count;i++){
         memcpy(&val[i*sizeof(int)*3], _gyroList.getById(i)->convertData, sizeof(int)*3);

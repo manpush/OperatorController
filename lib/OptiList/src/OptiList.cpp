@@ -9,7 +9,10 @@ OptiList::OptiList() {
     Count=0;
     firstElement= nullptr;
 }
-
+/**
+ * вставка объекта гироскопа в список
+ * @param gyro_Info адрес на гироскоп
+ */
 void OptiList::push(MPUGyro * gyro_Info) {
     if (firstElement == nullptr){
         firstElement = new OptiList::data {
@@ -27,6 +30,11 @@ void OptiList::push(MPUGyro * gyro_Info) {
     }
     Count++;
 }
+/**
+ * получть адрес гироскопа по id
+ * @param id id гироскопа в списке
+ * @return адрес гироскопа
+ */
 MPUGyro * OptiList::getById(int id) {
     if (firstElement== nullptr){
         return nullptr;

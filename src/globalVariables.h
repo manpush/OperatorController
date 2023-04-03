@@ -14,23 +14,19 @@
 #include "../lib/GyroSenderRF24/src/GyroSender.h"
 #include <stdlib.h>
 
+/* объекты гироскопов */
 #ifdef MPU1
-
 MPUGyro * Mpu1;
-
 #endif
 
 #ifdef MPU2
-MPUGyro mpu2(MPU2);
+MPUGyro * Mpu2;
 #endif
 
 #ifdef MPU3
-MPUGyro mpu3(MPU3);
+MPUGyro * Mpu3;
 #endif
-
+/* объект пеердатчика данных */
 GyroSender * Gyro;
 
 #endif //OPRATORCONTROLLER_GLOBALVARIABLES_H
-
-
-                                                          // модуль связи на пинах 9 и 10

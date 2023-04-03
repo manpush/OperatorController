@@ -18,11 +18,11 @@ void setup() {
 #endif
 
 #ifdef MPU2
-    MPUGyro mpu2(MPU2);
+    Mpu2 = new MPUGyro(MPU2);
 #endif
 
 #ifdef MPU3
-    MPUGyro mpu3(MPU3);
+    Mpu3 = new MPUGyro(MPU3);
 #endif
 
  Gyro = new GyroSender(CE, CSN);
@@ -42,5 +42,5 @@ void setup() {
 void loop() {
     Mpu1->tick();
     Gyro->tick();
-    Mpu1->printPlot();
+//    Mpu1->printPlot();
 }
