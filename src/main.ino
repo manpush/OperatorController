@@ -31,10 +31,10 @@ void setup() {
     Gyro->_gyroList.push(Mpu1);
 #endif
 #ifdef MPU2
-    Gyro._gyroList.push(&Mpu2);
+    Gyro._gyroList.push(Mpu2);
 #endif
 #ifdef MPU3
-    Gyro._gyroList.push(&Mpu3);
+    Gyro._gyroList.push(Mpu3);
 #endif
 
 }
