@@ -1,3 +1,4 @@
+![норм код мем1](https://github.com/manpush/OperatorController/assets/64307135/cd6b53d0-4f77-4ae2-b5a5-ad3031a93519)
 OperatorController
 
 Программа микроконтроллера установренного на пульте управления роботиированным устройством. 
